@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - Chakrya Coffee</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="../boostrap.css" />
+
+  <!-- Google Fonts -->
+  <link href="../font.css" rel="stylesheet">
+
+  <!-- SweetAlert2 -->
+  <script src="../sweetalert.js"></script>
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="../boostrap.css">
+
+  <style>
+    body {
+      background: linear-gradient(to right, #f2c94c, #a9746e);
+      font-family: 'Poppins', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .form-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    .form-box h1 {
+      font-family: 'Pacifico', cursive;
+      color: #8B4513;
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .form-control {
+      border-radius: 12px;
+    }
+    .btn {
+      border-radius: 12px;
+    }
+    .text-center a {
+      color: #8B4513;
+    }
+    .input-group-text {
+      background-color: #fff;
+      border-radius: 0 12px 12px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-box">
+    <h1>Welcome to Chakrya Coffee ☕</h1>
+    <form id="loginForm">
+      <div class="mb-3">
+        <input type="text" id="username" class="form-control" placeholder="Username" required />
+      </div>
+      <div class="mb-3 position-relative">
+        <div class="input-group">
+          <input type="password" id="password" class="form-control" placeholder="Password" required />
+          <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+            <i class="bi bi-eye-slash" id="eyeIcon"></i>
+          </span>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success w-100">Login</button>
+      <div class="text-center mt-3">
+        Don’t have an account? <a href="signup.html">Sign Up</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    document.getElementById('togglePassword').addEventListener('click', function () {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      eyeIcon.className = isPassword ? 'bi bi-eye' : 'bi bi-eye-slash';
+    });
+
+    // Login form logic
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+
+      const match = users.find(user => user.username === username && user.password === password);
+      if (match) {
+        localStorage.setItem('loggedInUser', username);
+        Swal.fire('Success', 'Welcome back!', 'success').then(() => {
+          window.location.href = '/index.html';
+        });
+      } else {
+        Swal.fire('Oops!', 'Invalid username or password!', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

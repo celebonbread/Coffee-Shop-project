@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coffee Shop - Show Products & Invoice</title>
+  <link href="boostrap.css" rel="stylesheet" />
+  <link href="sweetalert.js" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding-top: 70px;
+    }
+    .card-img-top {
+      object-fit: cover;
+      height: 180px;
+      border-radius: 8px 8px 0 0;
+    }
+    .bg-custom-green {
+      background-color: #157347 !important;
+      color: white !important;
+      font-weight: 600;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    .bg-brown {
+      background-color: #795548 !important;
+      color: white !important;
+      font-weight: 600;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+    #productDisplay {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+    .product-box .card {
+      width: 12rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.12);
+      cursor: pointer;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease;
+    }
+    .product-box .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgb(0 0 0 / 0.18);
+    }
+    .invoice-table td, .invoice-table th {
+      text-align: center;
+      vertical-align: middle;
+    }
+    @media (max-width: 768px) {
+      #productDisplay {
+        justify-content: center;
+      }
+      .product-box .card {
+        width: 90vw;
+      }
+    }
+
+    /* Footer corrections for smaller size */
+    footer.bg-dark {
+      padding: 1rem 0;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+    footer.bg-dark h5 {
+      font-size: 1rem;
+    }
+    footer.bg-dark p,
+    footer.bg-dark ul li {
+      font-size: 0.85rem;
+      margin-bottom: 0.3rem;
+    }
+    footer.bg-dark ul li a {
+      font-size: 0.85rem;
+    }
+    footer.bg-dark .text-center {
+      padding: 0.5rem 0;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <img src="Image/Logo - Coffee cute.webp" alt="Coffee Logo" width="30" height="30" style="object-fit: cover;">
+        Chakrya Coffee Shop
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Add Coffee</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#">Show all coffee</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main container -->
+  <div class="container d-flex flex-wrap gap-4 justify-content-center">
+
+    <!-- Product Box -->
+    <div class="card product-box shadow-sm flex-grow-1" style="max-width:680px;">
+      <div class="card-header bg-custom-green">Products</div>
+      <div class="card-body" id="productDisplay">
+        <!-- Products will appear here -->
+      </div>
+    </div>
+
+    <!-- Invoice Box -->
+    <div class="card invoice-box shadow-sm flex-grow-1" style="max-width:520px;">
+      <div class="card-header bg-brown">Invoice Items</div>
+      <div class="card-body">
+        <table class="table invoice-table table-bordered align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Discount</th>
+              <th>Quantity</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="invoiceList">
+            <!-- Invoice items go here -->
+          </tbody>
+        </table>
+        <div class="invoice-footer mt-3 d-flex justify-content-between align-items-center">
+          <strong id="totalAmount">Total: $0.00</strong>
+          <div>
+            <button class="btn btn-success me-2" id="payBtn">Pay</button>
+            <button class="btn btn-danger" id="cancelBtn">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white mt-auto">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <h5 class="text-uppercase">Chakrya Coffee Shop</h5>
+          <p>Serving the best coffee in town with passion and quality.</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5 class="text-uppercase">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white text-decoration-none">Add Coffee</a></li>
+            <li><a href="display.html" class="text-white text-decoration-none">Show All Coffee</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5 class="text-uppercase">Contact</h5>
+          <p class="mb-1"><i class="bi bi-telephone-fill"></i> +855 12 345 678</p>
+          <p class="mb-0"><i class="bi bi-envelope-fill"></i> info@coffeeshop.com</p>
+        </div>
+      </div>
+      <div class="text-center mt-3 border-top pt-2">
+        <small>&copy; 2025 Chakrya Coffee Shop. All rights reserved.</small>
+      </div>
+    </div>
+  </footer>
+
+  <script src="boostrap.js"></script>
+  <script src="sweetalert.js"></script>
+
+  <script>
+    // Sample product data (could come from localStorage)
+    let coffeeData = JSON.parse(localStorage.getItem('coffeeData')) || [
+      { name: "Latte", price: 3.5, discount: 10, quantity: 10, image: "Image/latte.jpg" },
+      { name: "Americano", price: 3.0, discount: 0, quantity: 5, image: "Image/americano.jpg" }
+    ];
+
+    let invoiceItems = JSON.parse(localStorage.getItem('invoiceItems')) || [];
+
+    function saveData() {
+      localStorage.setItem('coffeeData', JSON.stringify(coffeeData));
+      localStorage.setItem('invoiceItems', JSON.stringify(invoiceItems));
+    }
+
+    function renderProducts() {
+      const container = document.getElementById('productDisplay');
+      container.innerHTML = '';
+      coffeeData.forEach((product, idx) => {
+        container.innerHTML += `
+          <div class="card mb-3" style="width: 12rem;">
+            <img src="${product.image}" class="card-img-top" alt="${product.name}">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <h5 class="card-title">${product.name}</h5>
+              <p class="card-text mb-1">Price: $${product.price.toFixed(2)}</p>
+              <p class="card-text mb-1">Discount: ${product.discount}%</p>
+              <p class="card-text mb-2">Stock: ${product.quantity}</p>
+              <button class="btn btn-primary btn-sm mt-auto" onclick="addToInvoice(${idx})" ${product.quantity === 0 ? 'disabled' : ''}>
+                Add to Invoice
+              </button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderInvoice() {
+      const tbody = document.getElementById('invoiceList');
+      tbody.innerHTML = '';
+      let total = 0;
+
+      invoiceItems.forEach((item, idx) => {
+        const product = coffeeData.find(p => p.name === item.name);
+        if (!product) return;
+
+        let priceAfterDiscount = item.price * (1 - item.discount / 100);
+        let itemTotal = priceAfterDiscount * item.quantity;
+        total += itemTotal;
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${item.name}</td>
+            <td>$${item.price.toFixed(2)}</td>
+            <td>${item.discount}%</td>
+            <td><input type="number" min="1" max="${product.quantity}" value="${item.quantity}" style="width:60px;"
+                onchange="updateQuantity(${idx}, this.value)"></td>
+            <td>$${itemTotal.toFixed(2)}</td>
+            <td><button class="btn btn-danger btn-sm" onclick="removeItem(${idx})">Delete</button></td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('totalAmount').textContent = `Total: $${total.toFixed(2)}`;
+      saveData();
+    }
+
+    function addToInvoice(index) {
+      const product = coffeeData[index];
+      if (product.quantity <= 0) {
+        Swal.fire('Out of stock', `${product.name} is out of stock.`, 'warning');
+        return;
+      }
+      const invoiceItem = invoiceItems.find(i => i.name === product.name);
+      if (invoiceItem) {
+        if (invoiceItem.quantity < product.quantity) {
+          invoiceItem.quantity++;
+        } else {
+          Swal.fire('Stock limit', `Only ${product.quantity} ${product.name} in stock`, 'info');
+        }
+      } else {
+        invoiceItems.push({ ...product, quantity: 1 });
+      }
+      renderInvoice();
+    }
+
+    function updateQuantity(idx, value) {
+      const newQty = parseInt(value);
+      if (isNaN(newQty) || newQty < 1) {
+        Swal.fire('Invalid quantity', 'Quantity must be at least 1.', 'error');
+        renderInvoice();
+        return;
+      }
+      const product = coffeeData.find(p => p.name === invoiceItems[idx].name);
+      if (newQty > product.quantity) {
+        Swal.fire('Stock exceeded', `Only ${product.quantity} ${product.name} available.`, 'warning');
+        renderInvoice();
+        return;
+      }
+      invoiceItems[idx].quantity = newQty;
+      renderInvoice();
+    }
+
+    function removeItem(idx) {
+      invoiceItems.splice(idx, 1);
+      renderInvoice();
+    }
+
+    document.getElementById('payBtn').addEventListener('click', () => {
+      if (invoiceItems.length === 0) {
+        Swal.fire('Empty invoice', 'Add some items first.', 'info');
+        return;
+      }
+
+      Swal.fire({
+        title: 'Confirm Payment',
+        text: `Pay for ${invoiceItems.length} item(s)?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Pay',
+        cancelButtonText: 'Cancel'
+      }).then(result => {
+        if (result.isConfirmed) {
+          // Deduct stock quantities
+          invoiceItems.forEach(item => {
+            const product = coffeeData.find(p => p.name === item.name);
+            if (product) product.quantity -= item.quantity;
+          });
+          invoiceItems = [];
+          saveData();
+          renderProducts();
+          renderInvoice();
+          Swal.fire('Success', 'Payment completed.', 'success');
+        }
+      });
+    });
+
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      if (invoiceItems.length === 0) {
+        Swal.fire('Invoice empty', 'Nothing to clear.', 'info');
+        return;
+      }
+      Swal.fire({
+        title: 'Cancel Invoice',
+        text: 'Clear all invoice items?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Clear',
+        cancelButtonText: 'No'
+      }).then(result => {
+        if (result.isConfirmed) {
+          invoiceItems = [];
+          saveData();
+          renderInvoice();
+          Swal.fire('Cleared', 'Invoice cleared.', 'success');
+        }
+      });
+    });
+
+    // Initial render
+    renderProducts();
+    renderInvoice();
+  </script>
+
+</body>
+</html>

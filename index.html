@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coffee Shop</title>
+
+  <!-- Bootstrap CSS & Icons -->
+  <link href="boostrap.css" rel="stylesheet" />
+  <link href="sweetalert.js" rel="stylesheet">
+
+  <!-- Google Font for Sweet Title -->
+  <link href="font.css" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .bg-brown {
+      background-color: #8B4513 !important;
+      color: white !important;
+    }
+    .card-img-top {
+      object-fit: cover;
+      height: 200px;
+    }
+    table img {
+      object-fit: cover;
+      width: 50px;
+      height: 50px;
+      border-radius: 4px;
+    }
+
+    /* Sweet title style */
+    .title-sweet {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.8rem;
+      background: linear-gradient(to right, #a9746e, #f2c94c);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        <img src="Image/Logo - Coffee cute.webp" alt="Logo" width="30" height="30" style="object-fit: cover;" />
+        Chakrya Coffee Shop
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Add Coffee</a></li>
+          <li class="nav-item"><a class="nav-link" href="display.html">Show all coffee</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mb-5" style="margin-top: 90px;">
+    <!-- Add Coffee Form -->
+    <section id="addCoffee" class="mb-5">
+      <div class="card shadow-sm">
+        <div class="card-header title-sweet">☕ Add Coffee</div>
+        <div class="card-body">
+          <form id="coffeeForm" novalidate>
+            <div class="row g-3">
+              <div class="col-md-4">
+                <input type="text" id="name" class="form-control" placeholder="Name" required />
+              </div>
+              <div class="col-md-2">
+                <input type="number" step="0.1" id="price" class="form-control" placeholder="Price" required />
+              </div>
+              <div class="col-md-2">
+                <input type="number" id="discount" class="form-control" placeholder="Discount %" required />
+              </div>
+              <div class="col-md-2">
+                <input type="number" id="quantity" class="form-control" placeholder="Quantity" required />
+              </div>
+              <div class="col-md-2">
+                <input type="url" id="image" class="form-control" placeholder="Image URL" required />
+              </div>
+              <div class="col-12 text-end mt-3">
+                <button type="submit" class="btn btn-success">Add / Update Coffee</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inventory Table -->
+    <section id="inventory">
+      <div class="card shadow-sm">
+        <div class="card-header bg-secondary text-white">Inventory</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th>Name</th>
+                  <th>Price</th>
+                  <th>Discount</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Image</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white pt-4 pb-2 mt-auto">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <h5 class="text-uppercase">Chakrya Coffee Shop</h5>
+          <p>Serving the best coffee in town with passion and quality.</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5 class="text-uppercase">Quick Links</h5>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white text-decoration-none">Add Coffee</a></li>
+            <li><a href="display.html" class="text-white text-decoration-none">Show All Coffee</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5 class="text-uppercase">Contact</h5>
+          <p class="mb-1"><i class="bi bi-telephone-fill"></i> +855 12 345 678</p>
+          <p class="mb-0"><i class="bi bi-envelope-fill"></i> info@coffeeshop.com</p>
+        </div>
+      </div>
+      <div class="text-center mt-3 border-top pt-2">
+        <small>&copy; 2025 Chakrya Coffee Shop. All rights reserved.</small>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="boostrap.js"></script>
+  <script src="sweetalert.js"></script>
+
+  <script>
+    let coffeeData = JSON.parse(localStorage.getItem('coffeeData')) || [];
+    let editingIndex = null;
+
+    function calculateTotal(price, discount, quantity) {
+      return ((price - (price * discount / 100)) * quantity).toFixed(2);
+    }
+
+    function updateLocalStorage() {
+      localStorage.setItem('coffeeData', JSON.stringify(coffeeData));
+    }
+
+    function renderInventory() {
+      const list = document.getElementById('inventoryList');
+      if (!list) return;
+      list.innerHTML = '';
+      coffeeData.forEach((coffee, i) => {
+        list.innerHTML += `
+          <tr>
+            <td>${coffee.name}</td>
+            <td>$${coffee.price.toFixed(2)}</td>
+            <td>${coffee.discount}%</td>
+            <td>${coffee.quantity}</td>
+            <td>$${coffee.total}</td>
+            <td><img src="${coffee.image}" alt="${coffee.name}"></td>
+            <td>
+              <button class="btn btn-sm btn-warning" onclick="editCoffee(${i})">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteCoffee(${i})">Delete</button>
+            </td>
+          </tr>`;
+      });
+    }
+
+    function editCoffee(index) {
+      const coffee = coffeeData[index];
+      if (!coffee) return;
+      document.getElementById('name').value = coffee.name;
+      document.getElementById('price').value = coffee.price;
+      document.getElementById('discount').value = coffee.discount;
+      document.getElementById('quantity').value = coffee.quantity;
+      document.getElementById('image').value = coffee.image;
+      editingIndex = index;
+      window.location.hash = '#addCoffee';
+    }
+
+    function deleteCoffee(index) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          coffeeData.splice(index, 1);
+          updateLocalStorage();
+          renderInventory();
+          Swal.fire('Deleted!', 'Coffee deleted successfully.', 'success');
+        }
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderInventory();
+
+      const coffeeForm = document.getElementById('coffeeForm');
+      coffeeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const price = parseFloat(document.getElementById('price').value);
+        const discount = parseInt(document.getElementById('discount').value);
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const image = document.getElementById('image').value.trim();
+
+        if (!name || isNaN(price) || isNaN(discount) || isNaN(quantity) || !image) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Please fill all fields correctly!'
+          });
+          return;
+        }
+
+        const total = calculateTotal(price, discount, quantity);
+        const coffeeItem = { name, price, discount, quantity, image, total };
+
+        if (editingIndex !== null) {
+          coffeeData[editingIndex] = coffeeItem;
+          editingIndex = null;
+          Swal.fire('Updated!', 'Coffee updated successfully.', 'success');
+        } else {
+          coffeeData.push(coffeeItem);
+          Swal.fire('Added!', 'Coffee added successfully.', 'success');
+        }
+
+        updateLocalStorage();
+        renderInventory();
+        coffeeForm.reset();
+      });
+    });
+  </script>
+</body>
+</html>
